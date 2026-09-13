@@ -17,7 +17,7 @@ Uploaded files live in `public/media`. All authored content remains in git.
 
 ## Add a GitHub project
 
-Add the `portfolio` topic to a public repository owned by `udaygirhepunje`. The scheduled workflow picks it up within six hours. To publish sooner, open Actions, choose **Deploy portfolio**, then **Run workflow**.
+Add the `portfolio` topic to a public repository owned by `udaygirhepunje` or `uday-appdirect`. The scheduled workflow picks it up within six hours. To publish sooner, open Actions, choose **Deploy portfolio**, then **Run workflow**.
 
 GitHub owns the repository name, README, language, topics, stars, and links. Add a CMS project entry with the same GitHub URL when you need a custom role, outcome, cover, or description. The CMS copy wins.
 

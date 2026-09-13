@@ -3,7 +3,15 @@ import { dirname, resolve } from 'node:path';
 import { marked } from 'marked';
 import sanitizeHtml from 'sanitize-html';
 
-const USERNAME = 'udaygirhepunje';
+if (typeof process.loadEnvFile === 'function') {
+  try {
+    process.loadEnvFile();
+  } catch {
+    // Optional .env file
+  }
+}
+
+const GITHUB_ACCOUNTS = ['udaygirhepunje', 'uday-appdirect'] as const;
 const OUTPUT_PATH = resolve('src/generated/github.json');
 const API_TIMEOUT_MS = 15_000;
 
@@ -35,6 +43,7 @@ type ContributionWeek = {
 type GeneratedData = {
   schemaVersion: 1;
   username: string;
+  accounts: string[];
   projects: Array<{
     name: string;
     description: string | null;
@@ -65,7 +74,8 @@ type GeneratedData = {
 function emptyData(): GeneratedData {
   return {
     schemaVersion: 1,
-    username: USERNAME,
+    username: GITHUB_ACCOUNTS[0],
+    accounts: [...GITHUB_ACCOUNTS],
     projects: [],
     stats: {
       publicRepoCount: null,
@@ -84,7 +94,7 @@ function emptyData(): GeneratedData {
 function githubHeaders(token?: string, accept = 'application/vnd.github+json') {
   return {
     Accept: accept,
-    'User-Agent': `${USERNAME}-portfolio-build`,
+    'User-Agent': `${GITHUB_ACCOUNTS[0]}-portfolio-build`,
     'X-GitHub-Api-Version': '2022-11-28',
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
@@ -103,12 +113,12 @@ async function githubFetch<T>(url: string, token?: string, accept?: string): Pro
   return response.json() as Promise<T>;
 }
 
-async function fetchRepositories(token?: string): Promise<Repository[]> {
+async function fetchRepositoriesForUser(username: string, token?: string): Promise<Repository[]> {
   const repositories: Repository[] = [];
 
   for (let page = 1; ; page += 1) {
     const batch = await githubFetch<Repository[]>(
-      `https://api.github.com/users/${USERNAME}/repos?type=owner&sort=updated&direction=desc&per_page=100&page=${page}`,
+      `https://api.github.com/users/${username}/repos?type=owner&sort=updated&direction=desc&per_page=100&page=${page}`,
       token,
       'application/vnd.github+json, application/vnd.github.mercy-preview+json',
     );
@@ -117,6 +127,32 @@ async function fetchRepositories(token?: string): Promise<Repository[]> {
   }
 
   return repositories;
+}
+
+function getTokenForAccount(username: string): string | undefined {
+  if (username === 'uday-appdirect') {
+    return (
+      process.env.WORK_GITHUB_TOKEN?.trim() ||
+      process.env.GITHUB_WORK_TOKEN?.trim() ||
+      process.env.GITHUB_TOKEN?.trim() ||
+      undefined
+    );
+  }
+  return process.env.GITHUB_TOKEN?.trim() || undefined;
+}
+
+async function fetchAllRepositories(): Promise<Repository[]> {
+  const allRepositories: Repository[] = [];
+  for (const username of GITHUB_ACCOUNTS) {
+    const token = getTokenForAccount(username);
+    try {
+      const repos = await fetchRepositoriesForUser(username, token);
+      allRepositories.push(...repos);
+    } catch (error) {
+      console.warn(`Could not fetch repositories for ${username}:`, error);
+    }
+  }
+  return allRepositories;
 }
 
 async function fetchReadme(repository: Repository, token?: string) {
@@ -174,23 +210,42 @@ async function fetchReadme(repository: Repository, token?: string) {
   }
 }
 
-async function fetchPublicRepoCount(token?: string): Promise<number> {
-  const user = await githubFetch<{ public_repos: number }>(
-    `https://api.github.com/users/${USERNAME}`,
-    token,
-  );
-  return user.public_repos;
+async function fetchPublicRepoCount(): Promise<number | null> {
+  let total = 0;
+  let successCount = 0;
+
+  for (const username of GITHUB_ACCOUNTS) {
+    const token = getTokenForAccount(username);
+    try {
+      const user = await githubFetch<{ public_repos: number }>(
+        `https://api.github.com/users/${username}`,
+        token,
+      );
+      if (typeof user.public_repos === 'number') {
+        total += user.public_repos;
+        successCount += 1;
+      }
+    } catch (error) {
+      console.warn(`Could not fetch the public repository count for ${username}:`, error);
+    }
+  }
+
+  return successCount > 0 ? total : null;
 }
 
-async function fetchContributions(token: string) {
-  const today = new Date();
-  const to = new Date(
-    Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate(), 23, 59, 59),
-  );
-  const from = new Date(to);
-  from.setUTCFullYear(from.getUTCFullYear() - 1);
-  from.setUTCDate(from.getUTCDate() + 1);
+type UserContributionsResult = {
+  createdAt: string;
+  totalContributions: number;
+  pullRequestContributions: number;
+  weeks: ContributionWeek[];
+};
 
+async function fetchContributionsForUser(
+  username: string,
+  token: string,
+  from: Date,
+  to: Date,
+): Promise<UserContributionsResult | null> {
   const query = `
     query PortfolioContributions($login: String!, $from: DateTime!, $to: DateTime!) {
       user(login: $login) {
@@ -223,7 +278,7 @@ async function fetchContributions(token: string) {
     body: JSON.stringify({
       query,
       variables: {
-        login: USERNAME,
+        login: username,
         from: from.toISOString(),
         to: to.toISOString(),
       },
@@ -232,7 +287,7 @@ async function fetchContributions(token: string) {
   });
 
   if (!response.ok) {
-    throw new Error(`GitHub GraphQL returned ${response.status}`);
+    throw new Error(`GitHub GraphQL returned ${response.status} for ${username}`);
   }
 
   const payload = (await response.json()) as {
@@ -252,37 +307,141 @@ async function fetchContributions(token: string) {
   };
 
   if (payload.errors?.length || !payload.data?.user) {
-    throw new Error(payload.errors?.map(({ message }) => message).join('; ') || 'GitHub user not found');
+    console.warn(
+      `GitHub GraphQL errors for ${username}:`,
+      payload.errors?.map(({ message }) => message).join('; '),
+    );
+    return null;
   }
 
   const user = payload.data.user;
-  const collection = user.contributionsCollection;
-  const createdAt = new Date(user.createdAt);
+  return {
+    createdAt: user.createdAt,
+    totalContributions: user.contributionsCollection.contributionCalendar.totalContributions,
+    pullRequestContributions: user.contributionsCollection.totalPullRequestContributions,
+    weeks: user.contributionsCollection.contributionCalendar.weeks,
+  };
+}
+
+function getContributionLevel(count: number): string {
+  if (count <= 0) return 'NONE';
+  if (count <= 2) return 'FIRST_QUARTILE';
+  if (count <= 5) return 'SECOND_QUARTILE';
+  if (count <= 9) return 'THIRD_QUARTILE';
+  return 'FOURTH_QUARTILE';
+}
+
+async function fetchContributions() {
+  const today = new Date();
+  const to = new Date(
+    Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate(), 23, 59, 59),
+  );
+  const from = new Date(to);
+  from.setUTCFullYear(from.getUTCFullYear() - 1);
+  from.setUTCDate(from.getUTCDate() + 1);
+
+  const results: UserContributionsResult[] = [];
+
+  for (const username of GITHUB_ACCOUNTS) {
+    const token = getTokenForAccount(username);
+    if (!token) {
+      console.warn(`No GitHub token available for ${username}; skipping contributions.`);
+      continue;
+    }
+    try {
+      const userResult = await fetchContributionsForUser(username, token, from, to);
+      if (userResult) results.push(userResult);
+    } catch (error) {
+      console.warn(`Could not fetch contribution data for ${username}:`, error);
+    }
+  }
+
+  if (results.length === 0) {
+    throw new Error('No contribution data could be fetched for any GitHub account');
+  }
+
+  const earliestCreatedAt = results.reduce((earliest, res) => {
+    const current = new Date(res.createdAt);
+    return current < earliest ? current : earliest;
+  }, new Date(results[0].createdAt));
+
   const accountYears = Math.max(
     0,
     to.getUTCFullYear() -
-      createdAt.getUTCFullYear() -
-      (Date.UTC(to.getUTCFullYear(), createdAt.getUTCMonth(), createdAt.getUTCDate()) >
+      earliestCreatedAt.getUTCFullYear() -
+      (Date.UTC(to.getUTCFullYear(), earliestCreatedAt.getUTCMonth(), earliestCreatedAt.getUTCDate()) >
       to.getTime()
         ? 1
         : 0),
   );
 
+  const totalPullRequestContributions = results.reduce(
+    (sum, res) => sum + res.pullRequestContributions,
+    0,
+  );
+
+  type DayInfo = {
+    date: string;
+    contributionCount: number;
+    contributionLevel: string;
+    weekday: number;
+  };
+  const daysByDate = new Map<string, DayInfo>();
+
+  for (const res of results) {
+    for (const week of res.weeks) {
+      for (const day of week.contributionDays) {
+        const existing = daysByDate.get(day.date);
+        if (existing) {
+          existing.contributionCount += day.contributionCount;
+        } else {
+          daysByDate.set(day.date, {
+            date: day.date,
+            contributionCount: day.contributionCount,
+            contributionLevel: day.contributionLevel,
+            weekday: day.weekday,
+          });
+        }
+      }
+    }
+  }
+
+  const templateWeeks = results[0].weeks;
+  const mergedWeeks: ContributionWeek[] = templateWeeks
+    .map((week) => {
+      const contributionDays = week.contributionDays
+        .map((day) => {
+          const mergedDay = daysByDate.get(day.date);
+          const count = mergedDay ? mergedDay.contributionCount : day.contributionCount;
+          return {
+            date: day.date,
+            contributionCount: count,
+            contributionLevel: getContributionLevel(count),
+            weekday: day.weekday,
+          };
+        })
+        .sort((a, b) => a.date.localeCompare(b.date));
+
+      return {
+        firstDay: week.firstDay,
+        contributionDays,
+      };
+    })
+    .sort((a, b) => a.firstDay.localeCompare(b.firstDay));
+
+  const totalContributions = Array.from(daysByDate.values()).reduce(
+    (sum, day) => sum + day.contributionCount,
+    0,
+  );
+
   return {
-    totalContributions: collection.contributionCalendar.totalContributions,
-    pullRequestContributions: collection.totalPullRequestContributions,
+    totalContributions,
+    pullRequestContributions: totalPullRequestContributions,
     accountYears,
     contributionYears: [],
     contributionCalendar: {
-      totalContributions: collection.contributionCalendar.totalContributions,
-      weeks: [...collection.contributionCalendar.weeks]
-        .sort((a, b) => a.firstDay.localeCompare(b.firstDay))
-        .map((week) => ({
-          firstDay: week.firstDay,
-          contributionDays: [...week.contributionDays].sort((a, b) =>
-            a.date.localeCompare(b.date),
-          ),
-        })),
+      totalContributions,
+      weeks: mergedWeeks,
     },
   };
 }
@@ -293,11 +452,10 @@ async function writeGeneratedData(data: GeneratedData) {
 }
 
 async function main() {
-  const token = process.env.GITHUB_TOKEN?.trim() || undefined;
   const data = emptyData();
 
   try {
-    const repositories = await fetchRepositories(token);
+    const repositories = await fetchAllRepositories();
     const portfolioRepositories = repositories
       .filter(
         (repository) =>
@@ -308,6 +466,7 @@ async function main() {
 
     data.projects = await Promise.all(
       portfolioRepositories.map(async (repository) => {
+        const token = getTokenForAccount(repository.full_name.split('/')[0]);
         const readme = await fetchReadme(repository, token);
         return {
           name: repository.name,
@@ -330,19 +489,21 @@ async function main() {
   }
 
   try {
-    data.stats.publicRepoCount = await fetchPublicRepoCount(token);
+    data.stats.publicRepoCount = await fetchPublicRepoCount();
   } catch (error) {
     console.warn('Could not fetch the public repository count:', error);
   }
 
-  if (token) {
+  const hasAnyToken = GITHUB_ACCOUNTS.some((username) => Boolean(getTokenForAccount(username)));
+
+  if (hasAnyToken) {
     try {
-      Object.assign(data.stats, await fetchContributions(token));
+      Object.assign(data.stats, await fetchContributions());
     } catch (error) {
       console.warn('Could not fetch GitHub contribution data:', error);
     }
   } else {
-    console.warn('GITHUB_TOKEN is not set; contribution data will be empty.');
+    console.warn('No GITHUB_TOKEN or WORK_GITHUB_TOKEN set; contribution data will be empty.');
   }
 
   await writeGeneratedData(data);

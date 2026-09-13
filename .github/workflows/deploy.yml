@@ -36,6 +36,7 @@ jobs:
         run: npm run build:site
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WORK_GITHUB_TOKEN: ${{ secrets.WORK_GITHUB_TOKEN }}
 
       - name: Install test browsers
         run: npx playwright install --with-deps chromium firefox webkit

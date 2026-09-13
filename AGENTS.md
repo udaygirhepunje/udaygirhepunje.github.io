@@ -30,7 +30,7 @@ public/media/           uploads
 scripts/                GitHub sync, PDF and OG generation, browser smoke
 ```
 
-`udaygirhepunje` is the GitHub user. Public repos tagged `portfolio` are ingested on build and on the six-hour Actions schedule.
+`udaygirhepunje` (personal) and `uday-appdirect` (work) are the tracked GitHub users. Public repos tagged `portfolio` from either account are ingested on build and on the six-hour Actions schedule. Contribution metrics, calendars, PRs, and public repo counts are aggregated across both accounts.
 
 ## Content rules
 
