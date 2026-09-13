@@ -1,0 +1,96 @@
+---
+interface Entry {
+  slug: string;
+  title: string;
+  description: string;
+  date: Date;
+  type: string;
+  cover?: string;
+  coverAlt?: string;
+}
+
+interface Props {
+  entries: Entry[];
+}
+
+const { entries } = Astro.props;
+---
+
+<div class="journal-grid">
+  {entries.map((entry) => (
+    <article>
+      <a href={`/journal/${entry.slug}/`}>
+        {entry.cover ? (
+          <img
+            src={entry.cover}
+            alt={entry.coverAlt || ''}
+            loading="lazy"
+            style={`view-transition-name: journal-${entry.slug}`}
+          />
+        ) : (
+          <div class="cover-placeholder" aria-hidden="true">
+            <span>{entry.type}</span>
+          </div>
+        )}
+        <p class="meta">{entry.type} · {entry.date.toLocaleDateString('en-IN', { dateStyle: 'medium' })}</p>
+        <h3>{entry.title}</h3>
+        <p>{entry.description}</p>
+      </a>
+    </article>
+  ))}
+</div>
+
+<style>
+  .journal-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1.5rem, 3vw, 3rem);
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  img,
+  .cover-placeholder {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border: 1px solid var(--line);
+    object-fit: cover;
+    background: var(--paper-raised);
+  }
+
+  .cover-placeholder {
+    display: grid;
+    place-items: center;
+  }
+
+  .cover-placeholder span,
+  .meta {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: var(--type-label);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .meta {
+    margin: 1rem 0 0.5rem;
+  }
+
+  h3 {
+    margin: 0 0 0.8rem;
+    font-size: var(--type-list);
+  }
+
+  article p:last-child {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  @media (max-width: 800px) {
+    .journal-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

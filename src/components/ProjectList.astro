@@ -1,0 +1,107 @@
+---
+export interface Project {
+  slug: string;
+  title: string;
+  summary: string;
+  outcome?: string;
+  tech: string[];
+  cover?: string;
+}
+
+interface Props {
+  projects: Project[];
+  limit?: number;
+}
+
+const { projects, limit } = Astro.props;
+const visible = typeof limit === 'number' ? projects.slice(0, limit) : projects;
+---
+
+<div class="project-list rule-list">
+  {visible.map((project, index) => (
+    <article class="project rule-row" style={`--i:${index}`}>
+      <a href={`/projects/${project.slug}/`}>
+        <div>
+          <h3 style={`view-transition-name: project-${project.slug}`}>{project.title}</h3>
+          <p>{project.outcome || project.summary}</p>
+        </div>
+        <ul aria-label="Technologies">
+          {project.tech.slice(0, 4).map((item) => <li>{item}</li>)}
+        </ul>
+      </a>
+    </article>
+  ))}
+</div>
+
+<style>
+  .project a {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(12rem, 0.5fr);
+    gap: 2rem;
+    align-items: center;
+    padding: clamp(1.5rem, 3vw, 2.8rem) 0;
+    text-decoration: none;
+  }
+
+  h3 {
+    margin: 0 0 0.5rem;
+    font-size: var(--type-list);
+    transition: color 160ms ease;
+  }
+
+  p {
+    max-width: 48rem;
+    margin: 0;
+    color: var(--muted);
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.4rem 0.9rem;
+    margin: 0;
+    padding: 0;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: var(--type-label);
+    letter-spacing: 0.1em;
+    list-style: none;
+    text-transform: uppercase;
+  }
+
+  .project a:hover h3 {
+    color: var(--accent);
+  }
+
+  @supports (animation-timeline: view()) {
+    .project {
+      animation: row-in linear both;
+      animation-range: entry 0 entry 80%;
+      animation-timeline: view();
+    }
+  }
+
+  @keyframes row-in {
+    from {
+      transform: translateY(1rem);
+    }
+  }
+
+  @media (max-width: 700px) {
+    .project a {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    ul {
+      justify-content: flex-start;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .project {
+      animation: none;
+    }
+  }
+</style>

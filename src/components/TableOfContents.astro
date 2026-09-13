@@ -1,0 +1,103 @@
+---
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+const items = headings.filter((heading) => heading.depth <= 3);
+---
+
+<aside aria-label="On this page">
+  <p class="eyebrow">On this page</p>
+  {items.length > 0 ? (
+    <nav data-toc>
+      {items.map((heading) => (
+        <a href={`#${heading.slug}`}>{heading.text}</a>
+      ))}
+    </nav>
+  ) : <p class="muted">A short note.</p>}
+</aside>
+
+<script>
+  const nav = document.querySelector('[data-toc]');
+  if (nav) {
+    const links = Array.from(nav.querySelectorAll('a[href^="#"]')) as HTMLAnchorElement[];
+    const headings = links
+      .map((link) => document.getElementById(decodeURIComponent(link.hash.slice(1))))
+      .filter((heading): heading is HTMLElement => heading !== null);
+
+    const setCurrent = (id: string) => {
+      links.forEach((link) => {
+        if (link.hash.slice(1) === id) {
+          link.setAttribute('aria-current', 'location');
+        } else {
+          link.removeAttribute('aria-current');
+        }
+      });
+    };
+
+    const update = () => {
+      const line = 96;
+      const last = headings.at(-1);
+      const atBottom =
+        last !== undefined &&
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+      const passed = headings.filter((heading) => heading.getBoundingClientRect().top <= line);
+      const current = atBottom ? last : passed.at(-1) ?? headings[0];
+      if (current) setCurrent(current.id);
+    };
+
+    update();
+
+    const observer = new IntersectionObserver(update, {
+      rootMargin: '-96px 0px -70% 0px',
+      threshold: 0,
+    });
+
+    headings.forEach((heading) => observer.observe(heading));
+  }
+</script>
+
+<style>
+  aside {
+    position: sticky;
+    top: 2rem;
+  }
+
+  nav {
+    display: grid;
+  }
+
+  nav a {
+    padding-block: 0.7rem;
+    border-bottom: 1px solid var(--line);
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: var(--type-label);
+    text-decoration: none;
+    transition:
+      color 0.3s ease,
+      border-bottom-color 0.3s ease;
+  }
+
+  nav a:hover,
+  nav a[aria-current='location'] {
+    color: var(--accent);
+  }
+
+  nav a[aria-current='location'] {
+    border-bottom-color: var(--accent);
+  }
+
+  @media (max-width: 760px) {
+    aside {
+      display: none;
+    }
+  }
+</style>

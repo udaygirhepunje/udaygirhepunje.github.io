@@ -1,0 +1,121 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Colophon · Uday Girhepunje"
+  description="How this static portfolio is built, typeset, edited, and progressively enhanced."
+  image="/og/colophon.png"
+>
+  <section class="page-shell colophon">
+    <div>
+      <p class="eyebrow">Under the paper</p>
+      <h1 class="page-title">The colophon</h1>
+      <p class="lede">
+        This site is an Astro build, not an application waiting for JavaScript. Pages CMS writes
+        YAML and Markdown to GitHub. A workflow reads public repository data, generates the
+        résumé and share cards, then sends plain files to GitHub Pages.
+      </p>
+      <p class="lede">
+        Instrument Serif sets the large type. IBM Plex Sans carries the reading. Plex Mono labels
+        the machinery. Native View Transitions, modern color, scroll timelines, and the Popover
+        API add detail when the browser knows them. The useful part works when it does not.
+      </p>
+      <a href="/journal/building-this-site/">Read how it was built</a>
+    </div>
+    <div>
+      <nav aria-label="Contact links">
+        <a href="mailto:udaygirhepunje41@gmail.com">Email</a>
+        <a href="https://www.linkedin.com/in/uday-girhepunje">LinkedIn</a>
+        <a href="https://github.com/udaygirhepunje">GitHub</a>
+        <a href="/downloads/uday-girhepunje-resume.pdf" download>Résumé</a>
+      </nav>
+      <section class="support" aria-labelledby="support-title">
+        <p id="support-title" class="eyebrow">In this browser</p>
+        <ul>
+          <li data-support="view-transition"><span>View Transitions</span><b>Checking</b></li>
+          <li data-support="light-dark"><span>light-dark()</span><b>Checking</b></li>
+          <li data-support="popover"><span>Popover</span><b>Checking</b></li>
+          <li data-support="scroll-timeline"><span>Scroll timelines</span><b>Checking</b></li>
+        </ul>
+      </section>
+    </div>
+  </section>
+  <p class="page-shell generated">Content in git · Built on {new Date().toISOString().slice(0, 10)}</p>
+</BaseLayout>
+
+<script>
+  const checks = {
+    'view-transition': 'startViewTransition' in document,
+    'light-dark': CSS.supports('color', 'light-dark(black, white)'),
+    popover: 'showPopover' in HTMLElement.prototype,
+    'scroll-timeline': CSS.supports('animation-timeline', 'view()'),
+  };
+
+  Object.entries(checks).forEach(([name, supported]) => {
+    const output = document.querySelector(`[data-support="${name}"] b`);
+    if (output) output.textContent = supported ? 'Supported' : 'Fallback';
+  });
+</script>
+
+<style>
+  .colophon {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: clamp(4rem, 10vw, 10rem);
+    min-height: 48vh;
+    align-items: center;
+    padding-block: var(--space);
+    border-top: 1px solid var(--line);
+  }
+
+  .colophon > div:first-child > .lede {
+    max-width: 42rem;
+  }
+
+  nav {
+    display: grid;
+    margin-bottom: 4rem;
+  }
+
+  nav a,
+  .support li {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: var(--type-label);
+    letter-spacing: 0.12em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .support ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .support b {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .generated {
+    padding-bottom: 2rem;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: var(--type-label);
+    letter-spacing: 0.1em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 800px) {
+    .colophon {
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+  }
+</style>

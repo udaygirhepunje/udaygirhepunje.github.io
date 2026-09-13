@@ -1,0 +1,46 @@
+---
+import ProjectList from '../../components/ProjectList.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getProjects } from '../../lib/data';
+
+const projects = await getProjects();
+const projectCards = projects.map(({ slug, title, summary, outcome, tech }) => ({
+  slug,
+  title,
+  summary,
+  outcome,
+  tech,
+}));
+---
+
+<BaseLayout
+  title="Selected work · Uday Girhepunje"
+  description="Full-stack systems, frontend performance, mobile apps, and AI developer tools."
+>
+  <header class="page-shell page-header">
+    <p class="eyebrow">Selected work · {projects.length}</p>
+    <h1 class="page-title">Built to<br /><em>be used.</em></h1>
+    <p class="lede">Case studies first. Repository notes second. The numbers come from the work.</p>
+  </header>
+  <section class="page-shell section" aria-label="Projects">
+    <ProjectList projects={projectCards} />
+  </section>
+</BaseLayout>
+
+<style>
+  .page-header {
+    display: grid;
+    min-height: 48vh;
+    align-content: center;
+    padding-block: var(--space);
+  }
+
+  h1 {
+    color: var(--accent);
+  }
+
+  h1 em {
+    color: var(--ink);
+    font-weight: 400;
+  }
+</style>

@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Page not found · Uday Girhepunje" noindex>
+  <section class="page-shell not-found">
+    <p class="eyebrow">404</p>
+    <h1 class="page-title">Wrong page.</h1>
+    <p class="lede">The address may have changed. The work is still here.</p>
+    <a class="button primary" href="/">Back home</a>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    min-height: 48vh;
+    padding-block: var(--space);
+  }
+
+  .not-found .lede {
+    margin-bottom: 2rem;
+  }
+</style>

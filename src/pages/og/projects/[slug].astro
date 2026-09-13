@@ -1,0 +1,17 @@
+---
+import OgLayout from '../../../layouts/OgLayout.astro';
+import { getProjects } from '../../../lib/data';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+
+const { project } = Astro.props;
+---
+
+<OgLayout
+  eyebrow={project.tech.slice(0, 3).join(' · ') || 'Project'}
+  title={project.title}
+  description={project.outcome || project.summary}
+/>

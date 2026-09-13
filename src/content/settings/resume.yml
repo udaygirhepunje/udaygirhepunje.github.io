@@ -1,0 +1,77 @@
+name: Uday Girhepunje
+title: Software Engineer Full Stack
+location: Pune, India
+contact:
+  email: udaygirhepunje41@gmail.com
+  phone: "9175706683"
+  phoneVisibility: pdf-only
+  linkedin: https://www.linkedin.com/in/uday-girhepunje
+  github: https://github.com/udaygirhepunje
+summary: Objectives and key results driven full-stack engineer with nearly three years of experience building high-performance applications. I focus on frontend performance, scalable integration patterns, and AI developer tools, with ownership from architecture and delivery through mentoring.
+experience:
+  - company: AppDirect
+    role: Associate Software Development Engineer
+    start: Jul 2023
+    end: Present
+    highlights:
+      - Architected the Connector Pattern for Product Recommendations and wrote RFCs for Adobe API and internal vector-search ingestion.
+      - Improved Checkout Largest Contentful Paint by 45%, from 5 seconds to 2.7 seconds, with tiered GraphQL queries for critical rendering paths.
+      - Reduced frontend bundle size with tree-shaking, preset-env usage options, dynamic imports, and removal of unused core libraries.
+      - Built PullPanda, an LLM code-review agent used across 26+ repositories and 5,200+ pull requests, reducing false positives by 40%.
+      - Served as React and Checkout subject-matter expert and mentored two interns through onboarding and delivery.
+  - company: AppDirect
+    role: Software Development Engineer Intern
+    start: Oct 2022
+    end: Apr 2023
+    highlights:
+      - Built a Web3 payment connector and verified end-to-end NFT and crypto test transactions.
+      - Introduced Cypress UI and API automation, increasing coverage by 52%.
+      - Migrated legacy REST APIs to GraphQL for the checkout micro-frontend.
+education:
+  - degree: B.E. in Computer Engineering
+    institution: Modern Education Society's Wadia College of Engineering
+    start: "2019"
+    end: "2023"
+skills:
+  - category: Languages
+    items:
+      - Java
+      - JavaScript (ES6+)
+      - TypeScript
+      - Python
+      - SQL
+  - category: Frontend
+    items:
+      - React
+      - Next.js
+      - React Native
+      - Redux
+      - Webpack
+      - Babel
+      - Vite
+      - HTML and CSS
+      - Cypress
+  - category: Backend and Cloud
+    items:
+      - Node.js
+      - Express
+      - Spring Boot
+      - GraphQL
+      - Docker
+      - Kubernetes
+      - AWS
+  - category: Emerging Tech
+    items:
+      - LLMs and Prompt Engineering
+      - Vector Databases
+      - Model Context Protocol (MCP)
+  - category: Tools
+    items:
+      - Cursor AI
+      - Git
+      - Jira
+      - CI/CD
+      - Cypress
+achievements:
+  - Two-time winner, AppDirect Global Hackathon 2025.
+  - Microsoft Azure cloud fundamentals and deployment roadmap.

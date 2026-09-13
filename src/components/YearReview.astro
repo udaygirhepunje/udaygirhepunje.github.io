@@ -1,0 +1,117 @@
+---
+interface Week {
+  firstDay: string;
+  count: number;
+}
+
+interface Props {
+  weeks: Week[];
+  commits: number;
+  pullRequests: number;
+}
+
+const { weeks, commits, pullRequests } = Astro.props;
+const max = Math.max(1, ...weeks.map((week) => week.count));
+const width = 1000;
+const height = 180;
+const gap = width / Math.max(weeks.length, 1);
+---
+
+{weeks.length > 0 && (
+  <section class="section year-review" aria-labelledby="year-title">
+    <div class="page-shell">
+      <p class="eyebrow">GitHub · Last 12 months</p>
+      <h2 id="year-title" class="section-title">Year in review</h2>
+      <div class="chart-wrap">
+        <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-labelledby="chart-title chart-desc">
+          <title id="chart-title">GitHub contributions by week</title>
+          <desc id="chart-desc">{weeks.length} weeks of activity. Highest week: {max} contributions.</desc>
+          <line x1="0" y1={height - 1} x2={width} y2={height - 1} />
+          {weeks.map((week, index) => {
+            const barHeight = Math.max(2, (week.count / max) * (height - 10));
+            return (
+              <rect
+                x={index * gap + gap * 0.25}
+                y={height - barHeight}
+                width={Math.max(2, gap * 0.45)}
+                height={barHeight}
+              >
+                <title>{week.firstDay}: {week.count} contributions</title>
+              </rect>
+            );
+          })}
+        </svg>
+      </div>
+      <dl>
+        <div>
+          <dt>Total contributions</dt>
+          <dd>{commits.toLocaleString()}</dd>
+        </div>
+        <div>
+          <dt>Pull requests</dt>
+          <dd>{pullRequests.toLocaleString()}</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+)}
+
+<style>
+  .year-review {
+    text-align: center;
+  }
+
+  .section-title {
+    margin-bottom: clamp(2rem, 4vw, 3.5rem);
+  }
+
+  .chart-wrap {
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  line {
+    stroke: var(--line);
+  }
+
+  rect {
+    fill: var(--ink);
+  }
+
+  dl {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 50rem;
+    margin: 4rem auto 0;
+    border-top: 1px solid var(--line);
+  }
+
+  dl div {
+    padding: 2rem;
+  }
+
+  dl div + div {
+    border-left: 1px solid var(--line);
+  }
+
+  dt {
+    margin-bottom: 0.8rem;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: var(--type-label);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  dd {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: var(--type-figure);
+  }
+</style>

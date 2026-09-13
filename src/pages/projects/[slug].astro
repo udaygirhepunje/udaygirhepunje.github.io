@@ -1,0 +1,147 @@
+---
+import { render } from 'astro:content';
+import ImageLightbox from '../../components/ImageLightbox.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getProjects } from '../../lib/data';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+
+const { project } = Astro.props;
+const rendered = project.entry ? await render(project.entry) : null;
+const Content = rendered?.Content;
+---
+
+<BaseLayout
+  title={`${project.title} · Uday Girhepunje`}
+  description={project.summary}
+  image={`/og/projects/${project.slug}.png`}
+>
+  <article>
+    <header class="page-shell project-header">
+      <p class="eyebrow">{project.role}{project.duration ? ` · ${project.duration}` : ''}</p>
+      <h1 class="page-title" style={`view-transition-name: project-${project.slug}`}>{project.title}</h1>
+      <p class="lede summary">{project.summary}</p>
+      <div class="project-meta">
+        <ul aria-label="Technologies">
+          {project.tech.map((item) => <li>{item}</li>)}
+        </ul>
+        <div class="actions">
+          {project.links.map((link) => (
+            <a class="button" href={link.url} target="_blank" rel="noreferrer">{link.label}</a>
+          ))}
+        </div>
+      </div>
+    </header>
+
+    {project.cover && (
+      <div class="page-shell project-cover">
+        <ImageLightbox src={project.cover} alt={project.coverAlt || `${project.title} project cover`} id={project.slug} />
+      </div>
+    )}
+
+    {(project.problem || project.outcome) && (
+      <section class="page-shell case-study section">
+        {project.problem && (
+          <div>
+            <p class="eyebrow">Problem</p>
+            <p class="lede">{project.problem}</p>
+          </div>
+        )}
+        {project.outcome && (
+          <div>
+            <p class="eyebrow">Outcome</p>
+            <p class="lede">{project.outcome}</p>
+          </div>
+        )}
+      </section>
+    )}
+
+    {(Content || project.readmeHtml) && (
+      <section class="page-shell section project-notes">
+        <p class="eyebrow">{project.source === 'github' ? 'Repository README' : 'Project notes'}</p>
+        <div class="prose">
+          {Content ? <Content /> : <div set:html={project.readmeHtml} />}
+        </div>
+      </section>
+    )}
+  </article>
+</BaseLayout>
+
+<style>
+  .project-header {
+    min-height: 48vh;
+    padding-block: var(--space);
+  }
+
+  h1 {
+    margin-block: clamp(1.5rem, 3vw, 2.5rem);
+    color: var(--accent);
+  }
+
+  .lede.summary {
+    max-width: 52rem;
+  }
+
+  .project-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    align-items: end;
+    margin-top: 4rem;
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    margin: 0;
+    padding: 0;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: var(--type-label);
+    letter-spacing: 0.1em;
+    list-style: none;
+    text-transform: uppercase;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+  }
+
+  .case-study {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(3rem, 10vw, 10rem);
+  }
+
+  .project-cover {
+    padding-bottom: var(--space);
+  }
+
+  .case-study .lede {
+    max-width: none;
+    line-height: 1.25;
+  }
+
+  .project-notes > .eyebrow {
+    margin-bottom: 4rem;
+  }
+
+  :global(.project-notes .prose > :first-child) {
+    margin-top: 0;
+  }
+
+  @media (max-width: 700px) {
+    .project-meta,
+    .case-study {
+      align-items: start;
+      grid-template-columns: 1fr;
+      flex-direction: column;
+    }
+  }
+</style>

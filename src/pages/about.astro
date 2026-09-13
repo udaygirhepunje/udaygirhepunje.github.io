@@ -1,0 +1,169 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getResume } from '../lib/data';
+
+const resume = await getResume();
+---
+
+<BaseLayout
+  title="About and résumé · Uday Girhepunje"
+  description={resume.summary}
+  image="/og/about.png"
+>
+  <section class="page-shell intro">
+    <p class="eyebrow">About · Pune, India</p>
+    <h1 class="page-title">Full stack,<br /><em>measured.</em></h1>
+    <div class="summary">
+      <p class="lede">{resume.summary}</p>
+      <a class="button primary" href="/downloads/uday-girhepunje-resume.pdf" download>Download résumé</a>
+    </div>
+  </section>
+
+  <section class="page-shell section" aria-labelledby="experience">
+    <p class="eyebrow">Professional experience</p>
+    <h2 id="experience" class="section-title">AppDirect</h2>
+    <div class="rule-list">
+      {resume.experience.map((job) => (
+        <article class="job rule-row">
+          <header>
+            <div>
+              <h3>{job.role}</h3>
+              <p>{job.company} · {resume.location}</p>
+            </div>
+            <p class="mono">{job.start} — {job.end}</p>
+          </header>
+          <ul>
+            {job.highlights.map((highlight) => <li>{highlight}</li>)}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="page-shell section resume-grid">
+    <div>
+      <p class="eyebrow">Skills</p>
+      {resume.skills.map((group) => (
+        <div class="skill-group">
+          <h3>{group.category}</h3>
+          <p>{group.items.join(' · ')}</p>
+        </div>
+      ))}
+    </div>
+    <div>
+      <p class="eyebrow">Education</p>
+      {resume.education.map((item) => (
+        <div class="education">
+          <h3>{item.degree}</h3>
+          <p>{item.institution}</p>
+          <p class="mono">{item.start} — {item.end}</p>
+        </div>
+      ))}
+      <p class="eyebrow achievements-label">Achievements</p>
+      {resume.achievements.map((achievement) => <p>{achievement}</p>)}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .intro {
+    display: grid;
+    min-height: 48vh;
+    grid-template-columns: 1.35fr 0.65fr;
+    gap: 5rem;
+    align-items: center;
+    padding-block: var(--space);
+  }
+
+  .intro h1 {
+    color: var(--accent);
+  }
+
+  .intro em {
+    color: var(--ink);
+    font-weight: 400;
+  }
+
+  .summary {
+    align-self: end;
+    padding-bottom: 2rem;
+  }
+
+  .summary .lede {
+    margin-bottom: 2rem;
+  }
+
+  .job {
+    padding-block: clamp(2.5rem, 5vw, 5rem);
+  }
+
+  .job header {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .job h3,
+  .skill-group h3,
+  .education h3 {
+    margin-bottom: 0.4rem;
+    font-size: var(--type-list);
+  }
+
+  .job header p,
+  .education p {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .job ul {
+    max-width: 72ch;
+    margin: 2rem 0 0 auto;
+    padding-left: 1.2rem;
+  }
+
+  .job li {
+    margin-bottom: 0.8rem;
+  }
+
+  .resume-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(4rem, 10vw, 10rem);
+  }
+
+  .skill-group,
+  .education {
+    padding-block: 1.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .skill-group p {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .achievements-label {
+    margin-top: 4rem;
+  }
+
+  @media (max-width: 800px) {
+    .intro,
+    .resume-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .intro {
+      gap: 1rem;
+    }
+
+    .summary {
+      align-self: start;
+    }
+
+    .job header {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+</style>

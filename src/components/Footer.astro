@@ -1,0 +1,76 @@
+<footer class="site-footer no-print">
+  <div class="page-shell footer-grid">
+    <div>
+      <p class="eyebrow">Get in touch</p>
+      <a class="email" href="mailto:udaygirhepunje41@gmail.com">udaygirhepunje41@gmail.com</a>
+    </div>
+    <nav aria-label="Footer navigation">
+      <a href="https://github.com/udaygirhepunje" rel="me">GitHub</a>
+      <a href="https://www.linkedin.com/in/uday-girhepunje" rel="me">LinkedIn</a>
+      <a href="/colophon/">Colophon</a>
+      <a href="/rss.xml">RSS</a>
+    </nav>
+  </div>
+  <div class="page-shell fine-print">
+    <span>© {new Date().getFullYear()} Uday Girhepunje</span>
+    <span>Built as static HTML</span>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding-block: clamp(4rem, 8vw, 8rem) 2rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 4rem;
+  }
+
+  .email {
+    font-family: var(--serif);
+    font-size: var(--type-figure);
+    line-height: 1;
+    overflow-wrap: anywhere;
+  }
+
+  nav {
+    display: grid;
+    align-content: start;
+  }
+
+  nav a {
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: var(--type-label);
+    letter-spacing: 0.12em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .fine-print {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 7rem;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: var(--type-label);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 700px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+
+    .fine-print {
+      gap: 1rem;
+      margin-top: 4rem;
+    }
+  }
+</style>

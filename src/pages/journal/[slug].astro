@@ -1,0 +1,79 @@
+---
+import { render } from 'astro:content';
+import ImageLightbox from '../../components/ImageLightbox.astro';
+import TableOfContents from '../../components/TableOfContents.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getJournal } from '../../lib/data';
+
+export async function getStaticPaths() {
+  const entries = await getJournal();
+  return entries.map((entry) => ({
+    params: { slug: entry.id.replace(/\.(md|mdx)$/, '') },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+const slug = entry.id.replace(/\.(md|mdx)$/, '');
+---
+
+<BaseLayout
+  title={`${entry.data.title} · Uday Girhepunje`}
+  description={entry.data.description}
+  image={`/og/journal/${slug}.png`}
+>
+  <article>
+    <header class="page-shell article-header">
+      <p class="eyebrow">
+        {entry.data.tags.join(' · ')} · {entry.data.publishedAt.toLocaleDateString('en-IN', { dateStyle: 'long' })}
+      </p>
+      <h1 class="page-title" style={`view-transition-name: journal-${slug}`}>{entry.data.title}</h1>
+      <p class="lede">{entry.data.description}</p>
+    </header>
+    {entry.data.cover && (
+      <div class="page-shell article-cover">
+        <ImageLightbox
+          src={entry.data.cover}
+          alt={entry.data.coverAlt || `${entry.data.title} cover`}
+          id={slug}
+        />
+      </div>
+    )}
+    <div class="page-shell article-grid section">
+      <TableOfContents headings={headings} />
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .article-header {
+    min-height: 48vh;
+    padding-block: var(--space);
+  }
+
+  h1 {
+    margin-block: clamp(1.5rem, 3vw, 2.5rem);
+    color: var(--accent);
+  }
+
+  .article-grid {
+    display: grid;
+    grid-template-columns: minmax(10rem, 0.35fr) minmax(0, 1fr);
+    gap: clamp(3rem, 10vw, 10rem);
+    align-items: start;
+  }
+
+  .article-cover {
+    padding-bottom: var(--space);
+  }
+
+  @media (max-width: 760px) {
+    .article-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

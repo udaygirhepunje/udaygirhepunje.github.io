@@ -1,0 +1,156 @@
+---
+// No props — purely decorative, aria-hidden
+---
+
+<div class="code-window" aria-hidden="true">
+  <div class="window-chrome">
+    <div class="dots">
+      <span></span><span></span><span></span>
+    </div>
+    <span class="window-title">profile.ts</span>
+  </div>
+  <div class="window-body">
+    <svg
+      class="code-svg"
+      viewBox="0 0 440 310"
+      xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-hidden="true"
+      font-family="IBM Plex Mono, monospace"
+      font-size="12"
+    >
+      <!-- line numbers -->
+      <g class="ln" fill="currentColor" opacity="0.25" font-size="11">
+        <text x="12" y="22">01</text>
+        <text x="12" y="44">02</text>
+        <text x="12" y="66">03</text>
+        <text x="12" y="88">04</text>
+        <text x="12" y="110">05</text>
+        <text x="12" y="132">06</text>
+        <text x="12" y="154">07</text>
+        <text x="12" y="176">08</text>
+        <text x="12" y="198">09</text>
+        <text x="12" y="220">10</text>
+        <text x="12" y="242">11</text>
+        <text x="12" y="264">12</text>
+        <text x="12" y="286">13</text>
+      </g>
+
+      <!-- code lines: indentation via x, no leading-space tspans -->
+      <!-- line 1 — no indent -->
+      <text x="46" y="22"><tspan class="c-keyword">const</tspan><tspan class="c-ident"> engineer</tspan><tspan class="c-text"> = &#x7B;</tspan></text>
+      <!-- line 2 — 1 indent -->
+      <text x="62" y="44"><tspan class="c-prop">name</tspan><tspan class="c-text">: </tspan><tspan class="c-string">'Uday Girhepunje'</tspan><tspan class="c-text">,</tspan></text>
+      <!-- line 3 — 1 indent -->
+      <text x="62" y="66"><tspan class="c-prop">role</tspan><tspan class="c-text">: </tspan><tspan class="c-string">'Full Stack SDE'</tspan><tspan class="c-text">,</tspan></text>
+      <!-- line 4 — 1 indent -->
+      <text x="62" y="88"><tspan class="c-prop">location</tspan><tspan class="c-text">: </tspan><tspan class="c-string">'Pune, India'</tspan><tspan class="c-text">,</tspan></text>
+      <!-- line 5 — 1 indent -->
+      <text x="62" y="110"><tspan class="c-prop">experience</tspan><tspan class="c-text">: </tspan><tspan class="c-string">'3+ years'</tspan><tspan class="c-text">,</tspan></text>
+      <!-- line 6 — 1 indent -->
+      <text x="62" y="132"><tspan class="c-prop">openToWork</tspan><tspan class="c-text">: </tspan><tspan class="c-keyword">true</tspan><tspan class="c-text">,</tspan></text>
+      <!-- line 7 — 1 indent -->
+      <text x="62" y="154"><tspan class="c-prop">stack</tspan><tspan class="c-text">: [</tspan></text>
+      <!-- line 8 — 2 indent -->
+      <text x="78" y="176"><tspan class="c-string">'React'</tspan><tspan class="c-text">, </tspan><tspan class="c-string">'TypeScript'</tspan><tspan class="c-text">,</tspan></text>
+      <!-- line 9 — 2 indent -->
+      <text x="78" y="198"><tspan class="c-string">'Node.js'</tspan><tspan class="c-text">, </tspan><tspan class="c-string">'GraphQL'</tspan><tspan class="c-text">,</tspan></text>
+      <!-- line 10 — 2 indent -->
+      <text x="78" y="220"><tspan class="c-string">'Spring Boot'</tspan><tspan class="c-text">, </tspan><tspan class="c-string">'AWS'</tspan><tspan class="c-text">,</tspan></text>
+      <!-- line 11 — 1 indent -->
+      <text x="62" y="242"><tspan class="c-text">],</tspan></text>
+      <!-- line 12 — 1 indent -->
+      <text x="62" y="264"><tspan class="c-prop">currentlyAt</tspan><tspan class="c-text">: </tspan><tspan class="c-string">'AppDirect'</tspan><tspan class="c-text">,</tspan></text>
+      <!-- line 13 — no indent -->
+      <text x="46" y="286"><tspan class="c-text">&#x7D;;</tspan></text>
+
+      <!-- blinking cursor -->
+      <rect class="cursor" x="46" y="293" width="7" height="13" rx="1"/>
+    </svg>
+  </div>
+</div>
+
+
+
+<style>
+  .code-window {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--paper-raised);
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.06),
+      0 8px 32px rgba(0, 0, 0, 0.05);
+  }
+
+  .window-chrome {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 1rem;
+    border-bottom: 1px solid var(--line);
+    background: var(--paper);
+  }
+
+  .dots {
+    display: flex;
+    gap: 0.4rem;
+    flex-shrink: 0;
+  }
+
+  .dots span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--line);
+  }
+
+  .window-title {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+
+  .window-body {
+    padding: 0.75rem 0.5rem 0.5rem;
+    overflow: hidden;
+  }
+
+  .code-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* Token colours */
+  .c-keyword  { fill: var(--accent); }
+  .c-string   { fill: oklch(52% 0.15 145); }
+  .c-comment  { fill: var(--muted); font-style: italic; }
+  .c-ident    { fill: var(--ink); }
+  .c-type     { fill: oklch(55% 0.18 250); }
+  .c-prop     { fill: oklch(55% 0.14 30); }
+  .c-number   { fill: oklch(52% 0.18 25); }
+  .c-text     { fill: var(--ink); opacity: 0.7; }
+
+  html.theme-dark .c-string  { fill: oklch(72% 0.15 145); }
+  html.theme-dark .c-type    { fill: oklch(72% 0.16 250); }
+  html.theme-dark .c-prop    { fill: oklch(72% 0.14 50); }
+  html.theme-dark .c-number  { fill: oklch(72% 0.16 30); }
+
+  /* Blinking cursor */
+  .cursor {
+    fill: var(--accent);
+    animation: blink 1.1s step-start infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cursor { animation: none; }
+  }
+</style>

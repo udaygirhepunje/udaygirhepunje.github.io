@@ -1,0 +1,168 @@
+---
+const path = Astro.url.pathname;
+const active = (href: string) => href === '/' ? path === '/' : path.startsWith(href);
+---
+
+<header class="site-header no-print">
+  <div class="header-inner page-shell">
+    <a class="wordmark" href="/" aria-label="Uday Girhepunje, home">
+      <span aria-hidden="true"></span>
+      Uday Girhepunje
+    </a>
+    <nav aria-label="Primary navigation">
+      <a href="/projects/" aria-current={active('/projects') ? 'page' : undefined}>Work</a>
+      <a href="/about/" aria-current={active('/about') ? 'page' : undefined}>About</a>
+      <a href="/journal/" aria-current={active('/journal') ? 'page' : undefined}>Journal</a>
+      <details class="mobile-menu">
+        <summary>Menu</summary>
+        <div>
+          <a href="/projects/">Work</a>
+          <a href="/about/">About</a>
+          <a href="/journal/">Journal</a>
+          <a href="/colophon/">Colophon</a>
+        </div>
+      </details>
+      <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle color theme">
+        <span class="theme-glyph" aria-hidden="true"></span>
+      </button>
+      <a class="resume-link" href="/downloads/uday-girhepunje-resume.pdf" download>Résumé</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: relative;
+    z-index: 10;
+  }
+
+  .header-inner {
+    display: flex;
+    min-height: 5.25rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--serif);
+    font-size: 1.25rem;
+    text-decoration: none;
+  }
+
+  .wordmark span {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.7rem, 2vw, 2rem);
+  }
+
+  nav a,
+  nav button {
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: var(--type-label);
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .theme-toggle {
+    display: inline-grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    margin-inline: -0.25rem;
+    border-radius: 50%;
+    color: var(--ink);
+  }
+
+  .theme-glyph {
+    width: 1.05rem;
+    height: 1.05rem;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    background: linear-gradient(90deg, currentColor 50%, transparent 50%);
+  }
+
+  nav a:hover,
+  nav a[aria-current='page'],
+  .theme-toggle:hover {
+    color: var(--accent);
+  }
+
+  nav .resume-link {
+    padding: 0.65rem 0.85rem;
+    background: var(--accent);
+    color: var(--paper-raised);
+  }
+
+  .mobile-menu {
+    display: none;
+    position: relative;
+  }
+
+  .mobile-menu summary {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: var(--type-label);
+    letter-spacing: 0.1em;
+    list-style: none;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .mobile-menu summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .mobile-menu div {
+    position: absolute;
+    top: 2rem;
+    right: 0;
+    display: grid;
+    min-width: 9rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--line);
+    background: var(--paper-raised);
+  }
+
+  .mobile-menu div a {
+    display: block;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  @media (max-width: 700px) {
+    .header-inner {
+      min-height: 4.5rem;
+    }
+
+    .wordmark {
+      font-size: 1rem;
+    }
+
+    .wordmark span,
+    nav a:not(.resume-link) {
+      display: none;
+    }
+
+    nav .mobile-menu,
+    .mobile-menu div a {
+      display: block;
+    }
+  }
+</style>

@@ -1,0 +1,156 @@
+media:
+  input: public/media
+  output: /media
+  rename: safe
+  categories: [image, document]
+
+content:
+  - name: profile
+    label: Profile
+    type: file
+    path: src/content/settings/profile.yml
+    format: yaml
+    fields:
+      - { name: name, label: Name, type: string, required: true }
+      - { name: headline, label: Headline, type: string, required: true }
+      - { name: location, label: Location, type: string, required: true }
+      - { name: email, label: Email, type: string, required: true }
+      - { name: openToWork, label: Open to work, type: boolean, default: true }
+      - { name: bio, label: Bio, type: text, required: true }
+      - name: links
+        label: Links
+        type: object
+        list: true
+        fields:
+          - { name: label, label: Label, type: string, required: true }
+          - { name: url, label: URL, type: string, required: true }
+
+  - name: resume
+    label: Resume
+    type: file
+    path: src/content/settings/resume.yml
+    format: yaml
+    fields:
+      - { name: name, label: Name, type: string, required: true }
+      - { name: title, label: Title, type: string, required: true }
+      - { name: location, label: Location, type: string, required: true }
+      - name: contact
+        label: Contact
+        type: object
+        fields:
+          - { name: email, label: Email, type: string, required: true }
+          - { name: phone, label: Phone, type: string, description: PDF only }
+          - name: phoneVisibility
+            label: Phone visibility
+            type: select
+            options:
+              values:
+                - { name: pdf-only, label: PDF only }
+          - { name: linkedin, label: LinkedIn, type: string, required: true }
+          - { name: github, label: GitHub, type: string, required: true }
+      - { name: summary, label: Summary, type: text, required: true }
+      - name: experience
+        label: Experience
+        type: object
+        list: true
+        fields:
+          - { name: company, label: Company, type: string, required: true }
+          - { name: role, label: Role, type: string, required: true }
+          - { name: start, label: Start, type: string, required: true }
+          - { name: end, label: End, type: string, required: true }
+          - { name: highlights, label: Highlights, type: text, list: true }
+      - name: education
+        label: Education
+        type: object
+        list: true
+        fields:
+          - { name: degree, label: Degree, type: string, required: true }
+          - { name: institution, label: Institution, type: string, required: true }
+          - { name: start, label: Start, type: string, required: true }
+          - { name: end, label: End, type: string, required: true }
+      - name: skills
+        label: Skills
+        type: object
+        list: true
+        fields:
+          - { name: category, label: Category, type: string, required: true }
+          - { name: items, label: Skills, type: string, list: true }
+      - { name: achievements, label: Achievements, type: text, list: true }
+
+  - name: projects
+    label: Projects
+    type: collection
+    path: src/content/projects
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view:
+      fields: [title, role, featured, order]
+      primary: title
+      sort: [order, title]
+      default:
+        sort: order
+        order: asc
+    fields:
+      - { name: title, label: Title, type: string, required: true }
+      - { name: summary, label: Summary, type: text, required: true }
+      - { name: role, label: Role, type: string, required: true }
+      - { name: problem, label: Problem, type: text }
+      - { name: outcome, label: Outcome, type: text }
+      - { name: duration, label: Duration, type: string }
+      - { name: achievement, label: Achievement, type: string }
+      - { name: cover, label: Cover image, type: image }
+      - { name: coverAlt, label: Cover alt text, type: string }
+      - { name: technologies, label: Technologies, type: string, list: true }
+      - name: links
+        label: Links
+        type: object
+        list: true
+        fields:
+          - { name: label, label: Label, type: string, required: true }
+          - { name: url, label: URL, type: string, required: true }
+      - { name: featured, label: Featured, type: boolean, default: false }
+      - { name: hidden, label: Hide from site, type: boolean, default: false }
+      - { name: order, label: Display order, type: number, required: true }
+      - name: body
+        label: Project details
+        type: rich-text
+        options:
+          format: markdown
+
+  - name: journal
+    label: Journal
+    type: collection
+    path: src/content/journal
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view:
+      fields: [title, publishedAt, draft]
+      primary: title
+      sort: [publishedAt, title]
+      default:
+        sort: publishedAt
+        order: desc
+    fields:
+      - { name: title, label: Title, type: string, required: true }
+      - { name: description, label: Description, type: text, required: true }
+      - name: type
+        label: Type
+        type: select
+        default: article
+        options:
+          values:
+            - { name: article, label: Article }
+            - { name: photography, label: Photography }
+            - { name: artwork, label: Artwork }
+            - { name: note, label: Note }
+      - { name: publishedAt, label: Published, type: date, required: true }
+      - { name: updatedAt, label: Updated, type: date }
+      - { name: tags, label: Tags, type: string, list: true }
+      - { name: cover, label: Cover image, type: image }
+      - { name: coverAlt, label: Cover alt text, type: string }
+      - { name: draft, label: Draft, type: boolean, default: false }
+      - name: body
+        label: Article
+        type: rich-text
+        options:
+          format: markdown

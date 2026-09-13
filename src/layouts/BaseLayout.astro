@@ -1,0 +1,95 @@
+---
+import '../styles/global.css';
+import instrumentItalic from '@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2?url';
+import instrumentNormal from '@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff2?url';
+import plexMono from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2?url';
+import plexMonoMedium from '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2?url';
+import plexSans from '@fontsource-variable/ibm-plex-sans/files/ibm-plex-sans-latin-wght-normal.woff2?url';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+  class?: string;
+}
+
+const {
+  title = 'Uday Girhepunje · Full Stack Software Engineer',
+  description = 'Full stack engineer working on frontend performance, scalable systems, and AI developer tools.',
+  image = '/og/home.png',
+  noindex = false,
+  class: className = '',
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const imageUrl = new URL(image, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f6f1e8" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href={instrumentNormal} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={instrumentItalic} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={plexSans} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={plexMono} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={plexMonoMedium} as="font" type="font/woff2" crossorigin />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" type="application/rss+xml" title="Uday Girhepunje journal" href="/rss.xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={imageUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+    <title>{title}</title>
+    <script is:inline>
+      (() => {
+        const saved = localStorage.getItem('theme');
+        const dark = saved === 'dark' || (!saved && matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.classList.toggle('theme-dark', dark);
+      })();
+    </script>
+  </head>
+  <body class={className}>
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+    <script is:inline>
+      document.querySelector('[data-theme-toggle]')?.addEventListener('click', (event) => {
+        const root = document.documentElement;
+        const goingDark = !root.classList.contains('theme-dark');
+        const apply = () => {
+          root.classList.toggle('theme-dark', goingDark);
+          localStorage.setItem('theme', goingDark ? 'dark' : 'light');
+        };
+
+        if ('startViewTransition' in document && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          const box = event.currentTarget.getBoundingClientRect();
+          root.style.setProperty('--theme-x', `${box.left + box.width / 2}px`);
+          root.style.setProperty('--theme-y', `${box.top + box.height / 2}px`);
+          root.classList.toggle('theme-to-dark', goingDark);
+          root.classList.toggle('theme-to-light', !goingDark);
+          const transition = document.startViewTransition(apply);
+          transition.finished.finally(() => root.classList.remove('theme-to-dark', 'theme-to-light'));
+        } else {
+          apply();
+        }
+      });
+    </script>
+  </body>
+</html>
