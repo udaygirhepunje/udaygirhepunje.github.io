@@ -6,13 +6,15 @@ problem: The Jain community needed a focused, privacy-conscious way to make matr
 outcome: Published the Android app and helped more than 500 couples connect.
 technologies:
   - React Native
+  - Android
+  - Material 3
 links:
   - label: Play Store
     url: https://play.google.com/store/apps/details?id=com.madhurmilan
   - label: GitHub
     url: https://github.com/udaygirhepunje/MadhurMilan
 featured: true
-order: 2
+order: 4
 ---
 
 I built Madhur Milan as a mobile product for people looking for a partner. More than 500 couples have used the app to connect.

@@ -11,8 +11,10 @@ const resume = await getResume();
   image="/og/about.png"
 >
   <section class="page-shell intro">
-    <p class="eyebrow">About · Pune, India</p>
-    <h1 class="page-title">Full stack,<br /><em>measured.</em></h1>
+    <div class="intro-title">
+      <p class="eyebrow">About · Pune, India</p>
+      <h1 class="page-title">Full stack,<br /><em>measured.</em></h1>
+    </div>
     <div class="summary">
       <p class="lede">{resume.summary}</p>
       <a class="button primary" href="/downloads/uday-girhepunje-resume.pdf" download>Download résumé</a>
@@ -21,7 +23,7 @@ const resume = await getResume();
 
   <section class="page-shell section" aria-labelledby="experience">
     <p class="eyebrow">Professional experience</p>
-    <h2 id="experience" class="section-title">AppDirect</h2>
+    <h2 id="experience" class="section-title">Engineering roles</h2>
     <div class="rule-list">
       {resume.experience.map((job) => (
         <article class="job rule-row">
@@ -69,24 +71,20 @@ const resume = await getResume();
   .intro {
     display: grid;
     min-height: 48vh;
-    grid-template-columns: 1.35fr 0.65fr;
-    gap: 5rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(3rem, 6vw, 6rem);
     align-items: center;
     padding-block: var(--space);
   }
 
   .intro h1 {
+    margin: 0;
     color: var(--accent);
   }
 
   .intro em {
     color: var(--ink);
     font-weight: 400;
-  }
-
-  .summary {
-    align-self: end;
-    padding-bottom: 2rem;
   }
 
   .summary .lede {

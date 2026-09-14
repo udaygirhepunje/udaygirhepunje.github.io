@@ -79,9 +79,18 @@ const imageUrl = new URL(image, Astro.site);
         };
 
         if ('startViewTransition' in document && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          const isClick = event.clientX !== 0 || event.clientY !== 0;
           const box = event.currentTarget.getBoundingClientRect();
-          root.style.setProperty('--theme-x', `${box.left + box.width / 2}px`);
-          root.style.setProperty('--theme-y', `${box.top + box.height / 2}px`);
+          const x = isClick ? event.clientX : (box.left + box.width / 2);
+          const y = isClick ? event.clientY : (box.top + box.height / 2);
+          const r = Math.hypot(
+            Math.max(x, innerWidth - x),
+            Math.max(y, innerHeight - y)
+          );
+          
+          root.style.setProperty('--theme-x', `${x}px`);
+          root.style.setProperty('--theme-y', `${y}px`);
+          root.style.setProperty('--theme-r', `${r}px`);
           root.classList.toggle('theme-to-dark', goingDark);
           root.classList.toggle('theme-to-light', !goingDark);
           const transition = document.startViewTransition(apply);

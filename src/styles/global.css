@@ -74,7 +74,6 @@ html.theme-dark {
 }
 
 html {
-  background: var(--paper);
   scroll-behavior: smooth;
 }
 
@@ -217,6 +216,11 @@ p {
   border-color: var(--accent);
   background: var(--accent);
   color: var(--paper-raised);
+}
+
+.button.primary:hover {
+  background: transparent;
+  color: var(--accent);
 }
 
 .rule-list {
@@ -585,13 +589,13 @@ html.theme-to-light::view-transition-old(root) {
   }
 
   to {
-    clip-path: circle(150vmax at var(--theme-x) var(--theme-y));
+    clip-path: circle(var(--theme-r) at var(--theme-x) var(--theme-y));
   }
 }
 
 @keyframes theme-reveal-in {
   from {
-    clip-path: circle(150vmax at var(--theme-x) var(--theme-y));
+    clip-path: circle(var(--theme-r) at var(--theme-x) var(--theme-y));
   }
 
   to {

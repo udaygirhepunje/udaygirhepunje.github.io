@@ -18,9 +18,15 @@ const projectCards = projects.map(({ slug, title, summary, outcome, tech }) => (
   description="Full-stack systems, frontend performance, mobile apps, and AI developer tools."
 >
   <header class="page-shell page-header">
-    <p class="eyebrow">Selected work · {projects.length}</p>
-    <h1 class="page-title">Built to<br /><em>be used.</em></h1>
-    <p class="lede">Case studies first. Repository notes second. The numbers come from the work.</p>
+    <div class="header-content">
+      <p class="eyebrow">Selected work · {projects.length}</p>
+      <h1 class="page-title">Built to<br /><em>be used.</em></h1>
+      <p class="lede">Case studies first. Repository notes second. The numbers come from the work.</p>
+    </div>
+    <div class="header-graphic">
+      <img src="/media/projects-building.jpg" alt="Minimalist architectural and software structure graphic" class="hero-image light-only" />
+      <img src="/media/projects-building-dark.jpg" alt="Minimalist architectural and software structure graphic" class="hero-image dark-only" />
+    </div>
   </header>
   <section class="page-shell section" aria-label="Projects">
     <ProjectList projects={projectCards} />
@@ -33,6 +39,37 @@ const projectCards = projects.map(({ slug, title, summary, outcome, tech }) => (
     min-height: 48vh;
     align-content: center;
     padding-block: var(--space);
+    gap: var(--space);
+  }
+
+  @media (min-width: 768px) {
+    .page-header {
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+    }
+  }
+
+  .header-graphic {
+    display: flex;
+    justify-content: center;
+  }
+
+  .hero-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+  }
+
+  .dark-only {
+    display: none !important;
+  }
+
+  :global(html.theme-dark) .light-only {
+    display: none !important;
+  }
+
+  :global(html.theme-dark) .dark-only {
+    display: block !important;
   }
 
   h1 {
