@@ -23,9 +23,9 @@ const resume = await getResume();
         <address>
           {resume.location}<br />
           <a href={`mailto:${resume.contact.email}`}>{resume.contact.email}</a><br />
-          <span data-pdf-phone></span>
-          <a href={resume.contact.github}>github.com/udaygirhepunje</a><br />
-          <a href={resume.contact.linkedin}>linkedin.com/in/uday-girhepunje</a>
+          <span data-pdf-phone></span><br />
+          <a href={resume.contact.github}>{resume.contact.github.replace(/^https?:\/\/(www\.)?/, '')}</a><br />
+          <a href={resume.contact.linkedin}>{resume.contact.linkedin.replace(/^https?:\/\/(www\.)?/, '')}</a>
         </address>
       </header>
       <p class="summary">{resume.summary}</p>

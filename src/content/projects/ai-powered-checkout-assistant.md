@@ -1,20 +1,21 @@
 ---
 title: AI-Powered Checkout Assistant
-summary: A checkout assistant built with Node.js, MCP, and an LLM during a 24-hour global hackathon.
-role: Team lead
+summary: A context-aware AI shopping agent built with Node.js, Model Context Protocol (MCP), and LLMs in 24 hours.
+role: Team lead and architect
 problem: Checkout actions lived behind separate controls and APIs, making a natural-language shopping flow hard to coordinate safely.
-outcome: Led a three-person team to third place globally with a working assistant in 24 hours.
+outcome: Led a three-person engineering team to win the AppDirect Global Hackathon award across company-wide entries in a 24-hour sprint.
 duration: 24 hours
-achievement: 3rd place in a global hackathon
+achievement: Global Hackathon Winner (AppDirect, 2025)
 technologies:
   - Node.js
-  - MCP
-  - LLM
+  - Model Context Protocol (MCP)
+  - React
+  - LLMs
 links: []
 featured: true
 order: 1
 ---
 
-I led the team that built this assistant in 24 hours. It used MCP to give an LLM the checkout context and tools needed to answer questions and guide a customer through the flow.
+I led the three-person engineering team that architected and built this assistant in a 24-hour hackathon. It used the Model Context Protocol (MCP) to provide an LLM with checkout context and tools to execute cart additions, discount calculations, and shipping updates from natural-language requests.
 
-The project placed third in the global hackathon.
+The project won the Global Hackathon award across company-wide entries at AppDirect in 2025.

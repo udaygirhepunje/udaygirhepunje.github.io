@@ -20,7 +20,7 @@
 <style>
   .site-footer {
     padding-block: clamp(2rem, 4vw, 3.25rem) 1.5rem;
-    border-top: 1px solid var(--line);
+    border-top: 2px solid var(--line-section);
   }
 
   .footer-grid {
@@ -32,8 +32,10 @@
 
   .email {
     display: inline-block;
-    font-family: var(--serif);
+    font-family: var(--display);
     font-size: var(--type-figure);
+    font-weight: 700;
+    letter-spacing: 0.01em;
     line-height: 1.1;
     overflow-wrap: anywhere;
   }
@@ -45,7 +47,7 @@
 
   nav a {
     padding: 0.55rem 0;
-    border-bottom: 1px solid var(--line);
+    border-bottom: 1px dashed var(--line-inner);
     font-family: var(--mono);
     font-size: var(--type-label);
     letter-spacing: 0.12em;

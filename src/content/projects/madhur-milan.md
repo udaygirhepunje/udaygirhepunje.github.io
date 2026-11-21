@@ -1,9 +1,9 @@
 ---
 title: Madhur Milan
-summary: A React Native app that has helped more than 500 couples connect.
+summary: A production matrimony mobile app serving 500+ active users with dynamic system theming and virtualized performance.
 role: Creator and developer
-problem: The Jain community needed a focused, privacy-conscious way to make matrimonial connections on mobile.
-outcome: Published the Android app and helped more than 500 couples connect.
+problem: The community needed a focused, privacy-conscious way to make matrimonial connections on mobile with smooth performance on low-end devices.
+outcome: Published a native Android application serving 500+ active users with 0 third-party data tracking.
 technologies:
   - React Native
   - Android
@@ -17,6 +17,6 @@ featured: true
 order: 4
 ---
 
-I built Madhur Milan as a mobile product for people looking for a partner. More than 500 couples have used the app to connect.
+I built and published Madhur Milan as a mobile product for the community. The application serves more than 500 active users, featuring dynamic system theming (Android 12+) and virtualized list components for smooth scrolling on low-end hardware.
 
-The app is available on Google Play, and its source code is public on GitHub.
+User profiles and search filters were built with privacy-first standards and zero third-party data tracking. The app is available on Google Play, and its source code is public on GitHub.

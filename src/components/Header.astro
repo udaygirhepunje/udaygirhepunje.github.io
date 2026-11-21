@@ -42,15 +42,17 @@ const active = (href: string) => href === '/' ? path === '/' : path.startsWith(h
     align-items: center;
     justify-content: space-between;
     gap: 2rem;
-    border-bottom: 1px solid var(--line);
+    border-bottom: 2px solid var(--line-section);
   }
 
   .wordmark {
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
-    font-family: var(--serif);
-    font-size: 1.25rem;
+    font-family: var(--display);
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
     text-decoration: none;
   }
 
@@ -150,7 +152,7 @@ const active = (href: string) => href === '/' ? path === '/' : path.startsWith(h
   .mobile-menu div a {
     display: block;
     padding: 0.7rem 0;
-    border-bottom: 1px solid var(--line);
+    border-bottom: 1px solid var(--line-inner);
   }
 
   @media (max-width: 700px) {

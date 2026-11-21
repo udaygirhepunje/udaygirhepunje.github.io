@@ -28,6 +28,7 @@ type Repository = {
   archived: boolean;
   fork: boolean;
   pushed_at: string;
+  default_branch?: string;
 };
 
 type ContributionWeek = {
@@ -169,12 +170,27 @@ async function fetchReadme(repository: Repository, token?: string) {
 
     const markdown = await response.text();
     const rendered = marked.parse(markdown, { async: false }) as string;
+    const branch = repository.default_branch || 'main';
+    const rawBaseUrl = `https://raw.githubusercontent.com/${repository.full_name}/${branch}/`;
+    const repoBlobUrl = `https://github.com/${repository.full_name}/blob/${branch}/`;
+
+    const resolveUrl = (hrefOrSrc: string | undefined, baseUrl: string): string => {
+      if (!hrefOrSrc) return '';
+      const trimmed = hrefOrSrc.trim();
+      if (/^(?:[a-z]+:)?\/\//i.test(trimmed) || trimmed.startsWith('data:') || trimmed.startsWith('#') || trimmed.startsWith('mailto:')) {
+        return trimmed;
+      }
+      const cleanPath = trimmed.replace(/^\.?\//, '');
+      return `${baseUrl}${cleanPath}`;
+    };
+
     const html = sanitizeHtml(rendered, {
       allowedTags: sanitizeHtml.defaults.allowedTags.concat([
         'details',
         'summary',
         'picture',
         'source',
+        'img',
       ]),
       allowedAttributes: {
         ...sanitizeHtml.defaults.allowedAttributes,
@@ -183,23 +199,30 @@ async function fetchReadme(repository: Repository, token?: string) {
         source: ['srcset', 'media', 'type'],
         code: ['class'],
       },
-      allowedSchemes: ['http', 'https', 'mailto'],
+      allowedSchemes: ['http', 'https', 'mailto', 'data'],
       allowProtocolRelative: false,
       transformTags: {
-        a: (_tagName, attributes) => ({
-          tagName: 'a',
-          attribs: {
+        a: (_tagName, attributes) => {
+          const attribs: Record<string, string> = {
             ...attributes,
             rel: 'noopener noreferrer',
-          },
-        }),
-        img: (_tagName, attributes) => ({
-          tagName: 'img',
-          attribs: {
+            target: '_blank',
+          };
+          if (attributes.href) {
+            attribs.href = resolveUrl(attributes.href, repoBlobUrl);
+          }
+          return { tagName: 'a', attribs };
+        },
+        img: (_tagName, attributes) => {
+          const attribs: Record<string, string> = {
             ...attributes,
             loading: 'lazy',
-          },
-        }),
+          };
+          if (attributes.src) {
+            attribs.src = resolveUrl(attributes.src, rawBaseUrl);
+          }
+          return { tagName: 'img', attribs };
+        },
       },
     });
 

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ExperienceTimeline from '../components/ExperienceTimeline.astro';
 import { getResume } from '../lib/data';
 
 const resume = await getResume();
@@ -24,22 +25,7 @@ const resume = await getResume();
   <section class="page-shell section" aria-labelledby="experience">
     <p class="eyebrow">Professional experience</p>
     <h2 id="experience" class="section-title">Engineering roles</h2>
-    <div class="rule-list">
-      {resume.experience.map((job) => (
-        <article class="job rule-row">
-          <header>
-            <div>
-              <h3>{job.role}</h3>
-              <p>{job.company} · {resume.location}</p>
-            </div>
-            <p class="mono">{job.start} — {job.end}</p>
-          </header>
-          <ul>
-            {job.highlights.map((highlight) => <li>{highlight}</li>)}
-          </ul>
-        </article>
-      ))}
-    </div>
+    <ExperienceTimeline items={resume.experience} location={resume.location} showAllHighlights={true} />
   </section>
 
   <section class="page-shell section resume-grid">
@@ -91,37 +77,15 @@ const resume = await getResume();
     margin-bottom: 2rem;
   }
 
-  .job {
-    padding-block: clamp(2.5rem, 5vw, 5rem);
-  }
-
-  .job header {
-    display: flex;
-    justify-content: space-between;
-    gap: 2rem;
-  }
-
-  .job h3,
   .skill-group h3,
   .education h3 {
     margin-bottom: 0.4rem;
     font-size: var(--type-list);
   }
 
-  .job header p,
   .education p {
     margin: 0;
     color: var(--muted);
-  }
-
-  .job ul {
-    max-width: 72ch;
-    margin: 2rem 0 0 auto;
-    padding-left: 1.2rem;
-  }
-
-  .job li {
-    margin-bottom: 0.8rem;
   }
 
   .resume-grid {
@@ -133,7 +97,7 @@ const resume = await getResume();
   .skill-group,
   .education {
     padding-block: 1.5rem;
-    border-bottom: 1px solid var(--line);
+    border-bottom: 1px dashed var(--line-inner);
   }
 
   .skill-group p {

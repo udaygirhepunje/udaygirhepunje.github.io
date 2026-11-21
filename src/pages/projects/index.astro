@@ -4,22 +4,25 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getProjects } from '../../lib/data';
 
 const projects = await getProjects();
-const projectCards = projects.map(({ slug, title, summary, outcome, tech }) => ({
+const projectCards = projects.map(({ slug, title, summary, outcome, tech, role, duration, stars }) => ({
   slug,
   title,
   summary,
   outcome,
   tech,
+  role,
+  duration,
+  stars,
 }));
 ---
 
 <BaseLayout
-  title="Selected work · Uday Girhepunje"
+  title="Featured side projects · Uday Girhepunje"
   description="Full-stack systems, frontend performance, mobile apps, and AI developer tools."
 >
   <header class="page-shell page-header">
     <div class="header-content">
-      <p class="eyebrow">Selected work · {projects.length}</p>
+      <p class="eyebrow">Featured side projects · {projects.length}</p>
       <h1 class="page-title">Built to<br /><em>be used.</em></h1>
       <p class="lede">Case studies first. Repository notes second. The numbers come from the work.</p>
     </div>

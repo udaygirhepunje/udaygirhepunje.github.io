@@ -48,8 +48,9 @@ When GitHub stats are missing, hide the figures. Do not invent counts.
 
 Paper, ink, hairline rules, tracked mono labels, serif display. Quiet, not loud.
 
-- Instrument Serif: display, page titles, ledes, figures.
-- IBM Plex Sans: body.
+- BenchNine: display, page titles, section titles, figures, wordmark.
+- Brawler: ledes, editorial accents.
+- Muli (Mulish): body copy and long-form reading.
 - IBM Plex Mono: eyebrows, nav, tags, buttons.
 
 Load Latin subsets only. Preload those files from `BaseLayout`. Dark theme is `html.theme-dark` plus hex tokens first, `oklch()` and `light-dark()` inside `@supports`.

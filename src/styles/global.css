@@ -1,6 +1,9 @@
-@import '@fontsource/instrument-serif/latin-400.css';
-@import '@fontsource/instrument-serif/latin-400-italic.css';
-@import '@fontsource-variable/ibm-plex-sans/wght.css';
+@import '@fontsource/benchnine/latin-400.css';
+@import '@fontsource/benchnine/latin-700.css';
+@import '@fontsource/brawler/latin-400.css';
+@import '@fontsource/brawler/latin-700.css';
+@import '@fontsource-variable/mulish/wght.css';
+@import '@fontsource-variable/mulish/wght-italic.css';
 @import '@fontsource/ibm-plex-mono/latin-400.css';
 @import '@fontsource/ibm-plex-mono/latin-500.css';
 @import 'remark-github-alerts/styles/github-base.css';
@@ -11,12 +14,15 @@
   --paper-raised: #fffdf8;
   --ink: #1a1814;
   --muted: #68635a;
-  --line: rgba(26, 24, 20, 0.18);
+  --line-section: rgba(26, 24, 20, 0.45);
+  --line-inner: rgba(26, 24, 20, 0.12);
+  --line: var(--line-inner);
   --accent: #1f4b8f;
-  --serif: 'Instrument Serif', Georgia, serif;
-  --sans: 'IBM Plex Sans Variable', Arial, sans-serif;
+  --display: 'BenchNine', Impact, sans-serif;
+  --serif: 'Brawler', Georgia, serif;
+  --sans: 'Mulish Variable', 'Muli', Arial, sans-serif;
   --mono: 'IBM Plex Mono', monospace;
-  --page: min(90rem, calc(100vw - 3rem));
+  --page: min(75rem, calc(100vw - 3rem));
   --space: clamp(4.5rem, 10vw, 10rem);
   --type-display: clamp(3.5rem, 9vw, 7.5rem);
   --type-page: clamp(2.4rem, 5vw, 4rem);
@@ -34,7 +40,9 @@ html.theme-dark {
   --paper-raised: #211f1a;
   --ink: #f2ede3;
   --muted: #b1aa9d;
-  --line: rgba(242, 237, 227, 0.2);
+  --line-section: rgba(242, 237, 227, 0.45);
+  --line-inner: rgba(242, 237, 227, 0.14);
+  --line: var(--line-inner);
   --accent: #8cb4ff;
 }
 
@@ -44,7 +52,9 @@ html.theme-dark {
     --paper-raised: oklch(99% 0.012 83);
     --ink: oklch(20% 0.014 80);
     --muted: oklch(48% 0.018 80);
-    --line: oklch(20% 0.014 80 / 18%);
+    --line-section: oklch(20% 0.014 80 / 45%);
+    --line-inner: oklch(20% 0.014 80 / 12%);
+    --line: var(--line-inner);
     --accent: oklch(43% 0.14 257);
   }
 
@@ -53,7 +63,9 @@ html.theme-dark {
     --paper-raised: oklch(25% 0.014 80);
     --ink: oklch(94.5% 0.018 83);
     --muted: oklch(72% 0.018 80);
-    --line: oklch(94.5% 0.018 83 / 20%);
+    --line-section: oklch(94.5% 0.018 83 / 45%);
+    --line-inner: oklch(94.5% 0.018 83 / 14%);
+    --line: var(--line-inner);
     --accent: oklch(75% 0.12 255);
   }
 }
@@ -136,10 +148,10 @@ p {
 h1,
 h2,
 h3 {
-  font-family: var(--serif);
-  font-weight: 400;
-  line-height: 0.98;
-  letter-spacing: -0.025em;
+  font-family: var(--display);
+  font-weight: 700;
+  line-height: 1.0;
+  letter-spacing: 0.01em;
   text-wrap: balance;
 }
 
@@ -153,8 +165,19 @@ p {
 }
 
 .section {
+  position: relative;
   padding-block: var(--space);
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--line-section);
+}
+
+.section::before {
+  content: '';
+  position: absolute;
+  top: -1.5px;
+  left: 0;
+  width: 3.5rem;
+  height: 3px;
+  background: var(--accent);
 }
 
 .eyebrow {
@@ -224,11 +247,11 @@ p {
 }
 
 .rule-list {
-  border-top: 1px solid var(--line);
+  border-top: 1px dashed var(--line-inner);
 }
 
 .rule-row {
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px dashed var(--line-inner);
 }
 
 .mono {

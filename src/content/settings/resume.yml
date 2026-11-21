@@ -1,5 +1,5 @@
 name: Uday Girhepunje
-title: Software Development Engineer (Full Stack)
+title: Software Developer 2 (Full Stack)
 location: Pune, India
 contact:
   email: udaygirhepunje41@gmail.com
@@ -7,39 +7,41 @@ contact:
   phoneVisibility: pdf-only
   linkedin: https://www.linkedin.com/in/uday-girhepunje
   github: https://github.com/udaygirhepunje
-summary: Full-stack engineer with over three years of experience architecting high-performance web applications, developer tooling, and enterprise AI integrations. Focused on Model Context Protocol (MCP) servers, agentic workflows, frontend performance optimization, and scalable connector patterns with end-to-end delivery from RFC to production.
+summary: Full Stack Software Engineer with 3+ years of experience architecting distributed e-commerce APIs, distributor integration platforms, and AI tooling at AppDirect. Promoted to Software Developer 2 in March 2026. Proven track record of shipping high-impact features including external GraphQL checkout APIs, enterprise Model Context Protocol connectors, and production performance optimizations.
 experience:
   - company: AppDirect
-    role: Software Development Engineer
-    start: Apr 2026
+    role: Software Developer 2
+    start: Mar 2026
     end: Present
     highlights:
-      - Building and enhancing AppDirect's Product Recommendations framework using React.js, Databricks, and GraphQL.
-      - Architecting connector patterns to standardize ingestion across external APIs and internal vector-search systems.
-  - company: Devs.ai (An AppDirect Company)
-    role: Software Development Engineer
-    start: May 2026
-    end: Aug 2026
-    highlights:
-      - Engineered features for an enterprise-grade AI platform enabling users to access leading LLMs and build custom AI workflows.
-      - Implemented spec-driven development with Next.js, TypeScript, and Temporal workflow orchestration for resilient agent execution.
+      - Architected an external commerce GraphQL API enabling 3rd-party merchants to programmatically generate checkout sessions, guest carts, and custom products on the fly.
+      - Implemented offer-capable GraphQL sessions with dynamic discount handling and fabricated pricing in active cart sessions, authoring the customer-facing integration guide.
+      - Built admin controls to restrict large language model access by user group and product surface, with instance roles, superuser management, Temporal database migrations, and an audit console.
+      - Integrated eight third-party enterprise services (including Salesforce, BigQuery, Gong, and Google Chat) into an AI agent using Model Context Protocol (MCP) with OAuth 2.1 dynamic client registration and PKCE.
+      - Scaffolded the next-generation purchase approval interface on Mantine UI, establishing reusable component libraries for request banners, cards, and listing queries.
+      - Patched critical CVE vulnerabilities across core frontend and API composition services; enforced cryptographic JWT signature verification on GraphQL endpoints; conducted sub-one-hour code reviews across team repositories.
   - company: AppDirect
-    role: Associate Software Development Engineer
+    role: Associate Software Developer
     start: Jul 2023
-    end: Apr 2026
+    end: Feb 2026
     highlights:
-      - Improved Marketplace Checkout Largest Contentful Paint (LCP) by 45%, reducing checkout steps from 3 to 2 and splitting monolithic REST APIs into tiered GraphQL queries.
-      - Built distributor catalog onboarding flows using React Query, Spring Boot, and Netflix DGS GraphQL framework.
-      - Built PullPanda, an LLM code-review agent deployed across 26+ repositories and 5,150+ pull requests, reducing false positives by 50%.
-      - Served as React and Checkout domain expert; mentored two junior engineers and interns through technical delivery.
+      - Core engineer on the Distributor Connector from initial MVP through global production rollout, building the catalog import pipeline, distributor configuration triggers, markup pricing UI, and pre-merge test suites.
+      - Automated merchant catalog onboarding workflows by deploying AI-driven product content enrichment, eliminating repetitive manual operations across operations teams.
+      - Designed and built the Frequently Bought Together recommendation engine end-to-end, authoring the technical RFC, configuring ETL and data cube pipelines, and exposing provider-agnostic GraphQL queries.
+      - Expanded the recommendation engine into soft bundles with cart discount calculations, quick-view previews, and conversion tracking across active marketplaces.
+      - Transitioned legacy checkout custom-attributes REST endpoints to strongly typed GraphQL queries and cart mutations across two global production feature-flag rollouts.
+      - Reduced checkout Largest Contentful Paint (LCP) by ~50% from 5.0 seconds to 2.5 seconds by splitting monolithic REST calls into prioritized, tiered GraphQL queries.
+      - Closed critical and high-severity Level Access accessibility audits across the checkout flow, resolving keyboard navigation, ARIA live regions, text reflow, and screen reader announcements.
+      - Built and maintained an automated pull request review bot across six repositories to enforce change size guidelines and verify issue tracking metadata.
+      - Implemented customizable drag-and-drop dashboard widgets with optimistic UI updates and date aggregation for the platform analytics portal.
   - company: AppDirect
     role: Software Development Engineer Intern
     start: Oct 2022
     end: Jun 2023
     highlights:
-      - Built a Web3 payment connector and verified end-to-end crypto test transactions.
-      - Introduced Cypress UI and API test automation adoption, increasing coverage by 42%.
-      - Migrated legacy REST APIs to GraphQL for the checkout micro-frontend.
+      - Developed an end-to-end Web3 payment connector supporting cryptocurrency and NFT transactions with verification workflows.
+      - Introduced Cypress end-to-end automation to the checkout micro-frontend, increasing UI and API test coverage by 42% and shortening regression testing cycles.
+      - Migrated legacy REST endpoints to GraphQL, improving data fetching efficiency for checkout components.
   - company: Microsoft
     role: Future Ready Talent Intern
     start: Oct 2021
@@ -47,7 +49,7 @@ experience:
     highlights:
       - Developed an e-commerce platform for merchandise and deployed it on Microsoft Azure cloud infrastructure.
 education:
-  - degree: B.E. in Computer Engineering (CGPA 8.9)
+  - degree: B.Tech in Computer Engineering
     institution: Modern Education Society's Wadia College of Engineering, Pune
     start: "2019"
     end: "2023"
@@ -61,45 +63,41 @@ skills:
       - SQL
   - category: Frontend
     items:
-      - React
+      - React.js
       - Next.js
-      - React Native
-      - Mantine UI
       - Redux
-      - React Query
       - Webpack
+      - Mantine UI
+      - HTML5/SCSS
+      - Material UI
       - Vite
-      - HTML and CSS
-      - Cypress
-  - category: Backend and Cloud
+  - category: Backend & Cloud
     items:
       - Node.js
-      - Express
       - Spring Boot
-      - Netflix DGS
       - GraphQL
-      - Temporal
+      - REST APIs
+      - PostgreSQL
+      - MySQL
       - Docker
       - Kubernetes
       - AWS
-      - Microsoft Azure
-      - Databricks
-  - category: Emerging Tech & AI
+  - category: AI & Emerging
     items:
       - Model Context Protocol (MCP)
-      - Agentic Workflows
-      - LLMs and Prompt Engineering
+      - LLMs & Prompt Engineering
       - Vector Embeddings
-  - category: Tools
+      - OAuth 2.1 / PKCE
+  - category: Tools & DevOps
     items:
-      - Cursor AI
       - Git
-      - Probot
-      - Octokit
-      - WebExtensions API
-      - Jira
+      - GitHub Actions
       - CI/CD
+      - Cypress
+      - ArgoCD
+      - Datadog
 achievements:
-  - Two-time winner, AppDirect Global Hackathon (including 2025 AI-Powered Checkout Assistant with MCP).
-  - Won Web Dev Heist organized by Google Developer Student Clubs.
-  - Microsoft Azure cloud fundamentals and deployment certification.
+  - "Global Hackathon Winner, AppDirect (2025): Awarded for architecting an MCP-based AI Checkout assistant under a 24-hour deadline across enterprise engineering teams."
+  - "Promotion to Software Developer 2 (March 2026): Promoted following technical delivery on the global Distributor launch, Adobe Recommendations rollout, and WCAG accessibility compliance."
+  - "Engineering Delivery Milestone (2026): Shipped 287 merged PRs across 26 repositories with a 26% year-over-year throughput gain while reducing production revert rate to a single incident."
+  - "Microsoft Certified: Azure Fundamentals (Cloud computing, security, and infrastructure deployment standards certification)."

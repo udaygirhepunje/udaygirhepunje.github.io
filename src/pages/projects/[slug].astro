@@ -12,6 +12,7 @@ export async function getStaticPaths() {
 const { project } = Astro.props;
 const rendered = project.entry ? await render(project.entry) : null;
 const Content = rendered?.Content;
+const hasCustomContent = Boolean(Content && project.entry?.body && project.entry.body.trim().length > 0);
 ---
 
 <BaseLayout
@@ -19,20 +20,30 @@ const Content = rendered?.Content;
   description={project.summary}
   image={`/og/projects/${project.slug}.png`}
 >
-  <article>
+  <article class="project-page">
     <header class="page-shell project-header">
-      <p class="eyebrow">{project.role}{project.duration ? ` · ${project.duration}` : ''}</p>
+      <div class="header-top">
+        <p class="eyebrow">{project.role}{project.duration ? ` · ${project.duration}` : ''}</p>
+        <div class="actions">
+          {project.links.map((link) => {
+            const isGithub = link.label.toLowerCase() === 'github' || link.url.includes('github.com');
+            return (
+              <a class="button" href={link.url} target="_blank" rel="noreferrer">
+                <span>{link.label}</span>
+                {isGithub && typeof project.stars === 'number' && project.stars > 0 && (
+                  <span class="btn-stars">★ {project.stars}</span>
+                )}
+              </a>
+            );
+          })}
+        </div>
+      </div>
       <h1 class="page-title" style={`view-transition-name: project-${project.slug}`}>{project.title}</h1>
       <p class="lede summary">{project.summary}</p>
-      <div class="project-meta">
+      <div class="project-tech">
         <ul aria-label="Technologies">
           {project.tech.map((item) => <li>{item}</li>)}
         </ul>
-        <div class="actions">
-          {project.links.map((link) => (
-            <a class="button" href={link.url} target="_blank" rel="noreferrer">{link.label}</a>
-          ))}
-        </div>
       </div>
     </header>
 
@@ -42,29 +53,53 @@ const Content = rendered?.Content;
       </div>
     )}
 
-    {(project.problem || project.outcome) && (
-      <section class="page-shell case-study section">
-        {project.problem && (
-          <div>
-            <p class="eyebrow">Problem</p>
-            <p class="lede">{project.problem}</p>
+    {(project.problem || project.outcome || hasCustomContent) && (
+      <section class="page-shell section case-study-section">
+        {(project.problem || project.outcome) && (
+          <div class="case-study-cards">
+            {project.problem && (
+              <div class="brief-card">
+                <span class="card-kicker mono">The Problem</span>
+                <p class="card-text">{project.problem}</p>
+              </div>
+            )}
+            {project.outcome && (
+              <div class="brief-card outcome-card">
+                <span class="card-kicker mono">The Outcome</span>
+                <p class="card-text">{project.outcome}</p>
+              </div>
+            )}
           </div>
         )}
-        {project.outcome && (
-          <div>
-            <p class="eyebrow">Outcome</p>
-            <p class="lede">{project.outcome}</p>
+
+        {hasCustomContent && Content && (
+          <div class="project-notes-block">
+            <span class="card-kicker mono">Overview & Implementation</span>
+            <div class="prose">
+              <Content />
+            </div>
           </div>
         )}
       </section>
     )}
 
-    {(Content || project.readmeHtml) && (
-      <section class="page-shell section project-notes">
-        <p class="eyebrow">{project.source === 'github' ? 'Repository README' : 'Project notes'}</p>
-        <div class="prose">
-          {Content ? <Content /> : <div set:html={project.readmeHtml} />}
+    {project.readmeHtml && (
+      <section class="page-shell section repository-readme">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Documentation</p>
+            <h2 class="section-title">README.md</h2>
+          </div>
+          {project.githubUrl && (
+            <a class="button" href={project.githubUrl} target="_blank" rel="noreferrer">
+              <span>Repository on GitHub ↗</span>
+              {typeof project.stars === 'number' && project.stars > 0 && (
+                <span class="btn-stars">★ {project.stars}</span>
+              )}
+            </a>
+          )}
         </div>
+        <div class="prose github-readme" set:html={project.readmeHtml} />
       </section>
     )}
   </article>
@@ -72,28 +107,34 @@ const Content = rendered?.Content;
 
 <style>
   .project-header {
-    min-height: 48vh;
-    padding-block: var(--space);
+    padding-top: clamp(2.5rem, 5vw, 4.5rem);
+    padding-bottom: clamp(2rem, 3.5vw, 3rem);
   }
 
-  h1 {
-    margin-block: clamp(1.5rem, 3vw, 2.5rem);
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+  }
+
+  .header-top .eyebrow {
+    margin-bottom: 0;
+  }
+
+  .page-title {
+    margin-block: 0.5rem 1.25rem;
     color: var(--accent);
   }
 
   .lede.summary {
     max-width: 52rem;
+    margin-bottom: 1.75rem;
   }
 
-  .project-meta {
-    display: flex;
-    justify-content: space-between;
-    gap: 2rem;
-    align-items: end;
-    margin-top: 4rem;
-  }
-
-  ul {
+  .project-tech ul {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem 1rem;
@@ -110,37 +151,110 @@ const Content = rendered?.Content;
   .actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.7rem;
+    align-items: center;
+    gap: 0.6rem;
   }
 
-  .case-study {
+  .btn-stars {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 0.5rem;
+    padding-left: 0.5rem;
+    border-left: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+    font-size: 0.9em;
+    opacity: 0.9;
+  }
+
+  .case-study-section {
+    padding-block: clamp(2.5rem, 4vw, 3.5rem);
+  }
+
+  .case-study-cards {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(3rem, 10vw, 10rem);
+    gap: clamp(1.25rem, 2.5vw, 2rem);
   }
 
-  .project-cover {
-    padding-bottom: var(--space);
+  .brief-card {
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+    border: 1px solid var(--line-inner);
+    background: var(--paper-raised);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
   }
 
-  .case-study .lede {
-    max-width: none;
-    line-height: 1.25;
+  .brief-card.outcome-card {
+    border-left: 3px solid var(--accent);
   }
 
-  .project-notes > .eyebrow {
-    margin-bottom: 4rem;
+  .card-kicker {
+    font-family: var(--mono);
+    font-size: var(--type-label);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
   }
 
-  :global(.project-notes .prose > :first-child) {
+  .card-text {
+    margin: 0;
+    font-family: var(--sans);
+    font-size: 1.05rem;
+    line-height: 1.55;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+
+  .project-notes-block {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px dashed var(--line-inner);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  :global(.project-notes-block .prose > :first-child) {
     margin-top: 0;
   }
 
-  @media (max-width: 700px) {
-    .project-meta,
-    .case-study {
-      align-items: start;
+  .project-cover {
+    padding-bottom: clamp(2rem, 3.5vw, 3rem);
+  }
+
+  .repository-readme {
+    padding-block: clamp(2.5rem, 4.5vw, 4rem);
+  }
+
+  .repository-readme .section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 2rem;
+    margin-bottom: clamp(2rem, 3.5vw, 3rem);
+  }
+
+  .repository-readme .section-title {
+    margin-bottom: 0;
+  }
+
+  :global(.github-readme > :first-child) {
+    margin-top: 0;
+  }
+
+  @media (max-width: 768px) {
+    .header-top {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .case-study-cards {
       grid-template-columns: 1fr;
+    }
+
+    .repository-readme .section-heading {
+      align-items: start;
       flex-direction: column;
     }
   }

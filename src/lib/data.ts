@@ -10,6 +10,8 @@ interface GithubData {
     topics: string[];
     language: string | null;
     stars: number;
+    forks?: number;
+    pushedAt?: string;
     readmeHtml: string | null;
   }>;
   stats: {
@@ -49,31 +51,48 @@ export async function getJournal() {
 
 export async function getProjects() {
   const custom = await getCollection('projects');
-  const customProjects = custom.filter((entry) => !entry.data.hidden).map((entry) => ({
-    source: 'custom' as const,
-    slug: entry.id.replace(/\.(md|mdx)$/, ''),
-    title: entry.data.title,
-    summary: entry.data.summary,
-    role: entry.data.role,
-    problem: entry.data.problem || '',
-    outcome: entry.data.outcome || entry.data.achievement || '',
-    duration: entry.data.duration || '',
-    tech: entry.data.technologies,
-    links: entry.data.links,
-    featured: entry.data.featured,
-    order: entry.data.order,
-    cover: entry.data.cover || '',
-    coverAlt: entry.data.coverAlt || '',
-    readmeHtml: '',
-    entry,
-  }));
+
+  const cleanUrl = (url: string) => url.toLowerCase().replace(/\/+$/, '');
+  const githubByUrl = new Map(
+    githubData.projects.map((repo) => [cleanUrl(repo.url), repo]),
+  );
+
+  const customProjects = custom.filter((entry) => !entry.data.hidden).map((entry) => {
+    const ghLink = entry.data.links.find(
+      (link) => link.label.toLowerCase() === 'github' || link.url.includes('github.com'),
+    );
+    const ghRepo = ghLink ? githubByUrl.get(cleanUrl(ghLink.url)) : undefined;
+
+    return {
+      source: 'custom' as const,
+      slug: entry.id.replace(/\.(md|mdx)$/, ''),
+      title: entry.data.title,
+      summary: entry.data.summary,
+      role: entry.data.role,
+      problem: entry.data.problem || '',
+      outcome: entry.data.outcome || entry.data.achievement || (ghRepo && ghRepo.stars > 0 ? `${ghRepo.stars} GitHub star${ghRepo.stars === 1 ? '' : 's'}` : ''),
+      duration: entry.data.duration || '',
+      tech: entry.data.technologies,
+      links: entry.data.links,
+      featured: entry.data.featured,
+      order: entry.data.order,
+      cover: entry.data.cover || '',
+      coverAlt: entry.data.coverAlt || '',
+      readmeHtml: ghRepo?.readmeHtml || '',
+      stars: ghRepo?.stars,
+      forks: ghRepo?.forks,
+      pushedAt: ghRepo?.pushedAt,
+      githubUrl: ghRepo?.url || ghLink?.url,
+      entry,
+    };
+  });
 
   const customUrls = new Set(
-    customProjects.flatMap((project) => project.links.map((link) => link.url.toLowerCase())),
+    customProjects.flatMap((project) => project.links.map((link) => cleanUrl(link.url))),
   );
 
   const githubProjects = githubData.projects
-    .filter((repo) => !customUrls.has(repo.url.toLowerCase()))
+    .filter((repo) => !customUrls.has(cleanUrl(repo.url)))
     .map((repo, index) => ({
       source: 'github' as const,
       slug: slugify(repo.name),
@@ -93,6 +112,10 @@ export async function getProjects() {
       cover: '',
       coverAlt: '',
       readmeHtml: repo.readmeHtml || '',
+      stars: repo.stars,
+      forks: repo.forks,
+      pushedAt: repo.pushedAt,
+      githubUrl: repo.url,
       entry: null,
     }));
 
